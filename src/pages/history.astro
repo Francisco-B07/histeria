@@ -1,0 +1,53 @@
+---
+import Layout from "../layouts/Layout.astro";
+import { getCldImageUrl } from "astro-cloudinary/helpers";
+
+const { searchParams } = Astro.url;
+const id = searchParams.get("id");
+
+if (id === null) {
+  return Astro.redirect("/");
+}
+
+const url = getCldImageUrl({ src: id });
+console.log({ id, url });
+---
+
+<Layout title="La historia detrás de tu imagen">
+  <main
+    data-id={id}
+    class="bg-gradient-to-b from-black via-purple-900 to-black text-gray-300 min-h-screen flex flex-col items-center py-10 px-4"
+  >
+    <div class="flex flex-col items-center justify-center py-14 mb-14">
+      <h1
+        class="text-5xl font-bold text-orange-600 tracking-wide uppercase animate-bounce duration-[3s] drop-shadow-lg"
+        style="font-family: 'Creepster', cursive;"
+      >
+        Título de la historia
+      </h1>
+      <h2
+        class="mt-4 text-xl text-gray-300 italic animate-pulse drop-shadow-md"
+      >
+        Carga una imagen... y descubre el oscuro secreto que acecha detrás de
+        ella.
+      </h2>
+    </div>
+    <button id="button-description">Description</button>
+    <img id="image" src={url} alt="Imagen de la historia" />
+  </main>
+</Layout>
+
+<style>
+  img {
+    max-width: 100%;
+    height: auto;
+    border-radius: 12px;
+    transition: opacity 0.3s ease;
+  }
+</style>
+<script>
+  import { getCldImageUrl } from "astro-cloudinary/helpers";
+  const boton = document.getElementById("button-description");
+  const id = document.querySelector("main")?.getAttribute("data-id") ?? "";
+  const image = document.getElementById("image") as HTMLImageElement;
+</script>
