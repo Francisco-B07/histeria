@@ -1,7 +1,6 @@
 ---
 import Layout from "../layouts/Layout.astro";
 import { CldUploadWidget } from "astro-cloudinary";
-import { navigate } from "astro:transitions/client";
 ---
 
 <Layout title="HisTerIA">
@@ -24,8 +23,10 @@ import { navigate } from "astro:transitions/client";
     </div>
     <CldUploadWidget
       id="upload-widget"
-      uploadPreset="upload-unsigned-images"
+      uploadPreset="upload-images"
+      signatureEndpoint="/api/sign-cloudinary-params"
       options={{
+        detection: "captioning",
         sources: ["local"],
         multiple: false,
         maxFiles: 1,
@@ -45,19 +46,19 @@ import { navigate } from "astro:transitions/client";
         },
         styles: {
           palette: {
-            window: "#1e1e1e", // Fondo oscuro de la ventana
-            windowBorder: "#ff6600", // Borde naranja para el toque Halloween
-            tabIcon: "#f1c40f", // Color de íconos
-            menuIcons: "#ff6600", // Íconos del menú en naranja
-            textDark: "#ffffff", // Texto oscuro para resaltar en el fondo
-            textLight: "#f39c12", // Texto ligero con un tono amarillo calabaza
-            link: "#ff6600", // Links en naranja Halloween
-            action: "#00ff99", // Botones de acción en rojo oscuro
-            inactiveTabIcon: "#5a5a5a", // Íconos inactivos en gris
-            error: "#ff0000", // Rojo intenso para los errores
-            inProgress: "#ff3300", // Color para mostrar progreso de carga
-            complete: "#00ff99", // Verde neón cuando se complete
-            sourceBg: "#0e0e0e", // Fondo oscuro para el selector de fuente
+            window: "#1e1e1e",
+            windowBorder: "#ff6600",
+            tabIcon: "#f1c40f",
+            menuIcons: "#ff6600",
+            textDark: "#ffffff",
+            textLight: "#f39c12",
+            link: "#ff6600",
+            action: "#00ff99",
+            inactiveTabIcon: "#5a5a5a",
+            error: "#ff0000",
+            inProgress: "#ff3300",
+            complete: "#00ff99",
+            sourceBg: "#0e0e0e",
           },
         },
       }}
@@ -76,13 +77,22 @@ import { navigate } from "astro:transitions/client";
   import { navigate } from "astro:transitions/client";
 
   const widget = document.getElementById("upload-widget");
+  const imageEdit = document.getElementById("image-edit") as HTMLImageElement;
 
   if (widget) {
     widget.addEventListener("clduploadwidget:success", ((
-      e: CustomEvent<{ info: { public_id: string } }>
+      e: CustomEvent<{
+        info: {
+          public_id: string;
+          info: { detection: { captioning: { data: { caption: string } } } };
+        };
+      }>
     ) => {
       const publicId = e.detail.info.public_id;
-      navigate(`/history?id=${publicId}`);
+      const descriptionImg =
+        e.detail.info.info.detection.captioning.data.caption;
+
+      navigate(`/history?id=${publicId}&description=${descriptionImg}`);
     }) as EventListener);
   }
 </script>

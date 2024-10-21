@@ -4,36 +4,51 @@ import { getCldImageUrl } from "astro-cloudinary/helpers";
 
 const { searchParams } = Astro.url;
 const id = searchParams.get("id");
+const description = searchParams.get("description");
 
 if (id === null) {
   return Astro.redirect("/");
 }
 
 const url = getCldImageUrl({ src: id });
-console.log({ id, url });
 ---
 
 <Layout title="La historia detrás de tu imagen">
   <main
     data-id={id}
+    data-description={description}
     class="bg-gradient-to-b from-black via-purple-900 to-black text-gray-300 min-h-screen flex flex-col items-center py-10 px-4"
   >
-    <div class="flex flex-col items-center justify-center py-14 mb-14">
-      <h1
-        class="text-5xl font-bold text-orange-600 tracking-wide uppercase animate-bounce duration-[3s] drop-shadow-lg"
-        style="font-family: 'Creepster', cursive;"
-      >
-        Título de la historia
-      </h1>
-      <h2
-        class="mt-4 text-xl text-gray-300 italic animate-pulse drop-shadow-md"
-      >
-        Carga una imagen... y descubre el oscuro secreto que acecha detrás de
-        ella.
-      </h2>
+    <div id="history">
+      <div class="flex flex-col items-center justify-center py-14">
+        <h1
+          id="title"
+          class="text-5xl font-bold text-orange-600 tracking-wide uppercase transition-opacity duration-300"
+          style="font-family: 'Creepster', cursive;"
+        >
+        </h1>
+      </div>
+      <div class="flex justify-center items-center w-[1000px] gap-10">
+        <div
+          id="story"
+          class="w-1/2 mt-6 text-lg text-gray-200 story-text min-h-[200px] opacity-0 transition-opacity duration-300"
+        >
+        </div>
+        <img
+          id="image"
+          src={url}
+          alt="Imagen de la historia"
+          class="w-1/2 mt-6 rounded-lg shadow-lg"
+        />
+      </div>
     </div>
-    <button id="button-description">Description</button>
-    <img id="image" src={url} alt="Imagen de la historia" />
+    <div
+      id="loading"
+      class="absolute h-full flex justify-center items-center text-4xl font-bold text-orange-600 tracking-wide transition-opacity duration-300"
+      style="font-family: 'Creepster', cursive;"
+    >
+      El misterio está a punto de revelarse...
+    </div>
   </main>
 </Layout>
 
@@ -44,10 +59,142 @@ console.log({ id, url });
     border-radius: 12px;
     transition: opacity 0.3s ease;
   }
+  #story {
+    background: rgba(0, 0, 0, 0.7);
+    border: 2px solid #ff6347;
+    border-radius: 12px;
+    padding: 16px;
+    max-width: 800px;
+    margin: 20px auto;
+    transition: opacity 0.3s ease;
+  }
+
+  @keyframes parpadeo {
+    0%,
+    100% {
+      opacity: 1;
+    }
+    50% {
+      opacity: 0.5;
+    }
+  }
+
+  .story-text {
+    animation: parpadeo 3s infinite;
+  }
+  .loading {
+    display: none;
+  }
+  #loading {
+    font-size: 3rem;
+    color: #ff4500;
+    text-shadow: 2px 2px 5px rgba(0, 0, 0, 0.8);
+    animation: flicker 2s infinite alternate;
+    letter-spacing: 2px;
+    font-family: "Creepster", cursive;
+    text-align: center;
+  }
+
+  @keyframes flicker {
+    0% {
+      opacity: 1;
+      text-shadow: 2px 2px 5px rgba(0, 0, 0, 0.8);
+    }
+    50% {
+      opacity: 0.6;
+      text-shadow: 4px 4px 10px rgba(0, 0, 0, 0.9);
+    }
+    100% {
+      opacity: 0.8;
+      text-shadow: 1px 1px 3px rgba(0, 0, 0, 1);
+    }
+  }
+
+  #history {
+    opacity: 0;
+    transition: opacity 3s ease;
+  }
 </style>
 <script>
   import { getCldImageUrl } from "astro-cloudinary/helpers";
-  const boton = document.getElementById("button-description");
-  const id = document.querySelector("main")?.getAttribute("data-id") ?? "";
+
+  const publicId =
+    document.querySelector("main")?.getAttribute("data-id") ?? "";
+  const description =
+    document.querySelector("main")?.getAttribute("data-description") ?? "";
+
+  const transformedImageUrl = `https://res.cloudinary.com/pancho/image/upload/e_grain:30,e_blur:20,l_text:Arial_20:${description},h_300,w_300,r_max/v1/${publicId}.jpg`;
+
   const image = document.getElementById("image") as HTMLImageElement;
+  const titleElement = document.getElementById("title");
+  const storyElement = document.getElementById("story");
+  const loadingElement = document.getElementById("loading");
+  const history = document.getElementById("history");
+
+  fetch("/api/generate-story", {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify({ description: description }),
+  })
+    .then((response) => {
+      if (!response.body) {
+        console.error("No se pudo obtener el cuerpo de la respuesta.");
+        return;
+      }
+      const reader = response.body.getReader();
+      const decoder = new TextDecoder("utf-8");
+
+      function read() {
+        reader.read().then(({ done, value }) => {
+          if (done && loadingElement && storyElement && history) {
+            loadingElement.style.display = "none";
+            storyElement.classList.remove("opacity-0");
+            history.style.opacity = "1";
+            history.classList.remove("hidden");
+            return;
+          }
+
+          const data = JSON.parse(decoder.decode(value));
+          if (!storyElement) {
+            console.error(
+              "No se encontró el elemento de la historia en el DOM."
+            );
+            return;
+          }
+          if (!titleElement) {
+            console.error(
+              "No se encontró el elemento de la historia en el DOM."
+            );
+            return;
+          }
+
+          // Añadir la historia al DOM en tiempo real
+          titleElement.textContent = data.title;
+          storyElement.textContent += data.story;
+          storyElement.classList.remove("hidden");
+
+          const url = getCldImageUrl({
+            src: publicId,
+            replaceBackground: data.prompt,
+          });
+
+          image.style.opacity = ".6";
+
+          image.src = url;
+
+          image.onload = () => {
+            image.style.opacity = "1";
+          };
+
+          read();
+        });
+      }
+
+      read();
+    })
+    .catch((error) => {
+      console.error("Error generando la historia:", error);
+    });
 </script>
