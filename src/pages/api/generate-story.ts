@@ -21,7 +21,7 @@ export const POST: APIRoute = async ({ request }) => {
         },
         {
           role: "user",
-          content: `Genera un título, una historia espeluznante basada en esta descripción de imagen y un prompt, el cual sera utilizado para generar un Background con IA: "${description}"`,
+          content: `Genera un título en español, una historia espeluznante basada en esta descripción de imagen y un prompt, el cual sera utilizado para generar un Background con IA: "${description}"`,
         },
       ],
     });
