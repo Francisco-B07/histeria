@@ -129,14 +129,11 @@ const url = getCldImageUrl({ src: id });
   const description =
     document.querySelector("main")?.getAttribute("data-description") ?? "";
 
-  const transformedImageUrl = `https://res.cloudinary.com/pancho/image/upload/e_grain:30,e_blur:20,l_text:Arial_20:${description},h_300,w_300,r_max/v1/${publicId}.jpg`;
-
   const image = document.getElementById("image") as HTMLImageElement;
   const titleElement = document.getElementById("title");
   const storyElement = document.getElementById("story");
   const loadingElement = document.getElementById("loading");
   const history = document.getElementById("history");
-  const smoke = document.getElementById("smoke");
 
   fetch("/api/generate-story", {
     method: "POST",
@@ -193,7 +190,6 @@ const url = getCldImageUrl({ src: id });
 
           image.onload = () => {
             image.style.opacity = "1";
-            // smoke!.style.display = "none";
           };
 
           read();

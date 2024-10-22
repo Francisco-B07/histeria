@@ -80,7 +80,6 @@ import SmokeBackground from "../components/SmokeBackground.astro";
   import { navigate } from "astro:transitions/client";
 
   const widget = document.getElementById("upload-widget");
-  const imageEdit = document.getElementById("image-edit") as HTMLImageElement;
 
   if (widget) {
     widget.addEventListener("clduploadwidget:success", ((
