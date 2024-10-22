@@ -12,16 +12,17 @@ import SmokeBackground from "../components/SmokeBackground.astro";
 
     <div class="flex flex-col items-center justify-center py-14 mb-14">
       <h1
-        class="text-5xl font-bold text-orange-600 tracking-wide uppercase animate-bounce duration-[3s] drop-shadow-lg"
+        class="text-7xl lg:text-8xl font-bold text-orange-600 tracking-wide uppercase animate-bounce duration-[3s] drop-shadow-lg"
         style="font-family: 'Creepster', cursive;"
       >
         HisTerIA
       </h1>
       <h2
-        class="mt-4 text-xl text-gray-300 italic animate-pulse drop-shadow-md"
+        class="mt-10 text-xl lg:text-2xl text-gray-300 italic animate-pulse drop-shadow-md text-pretty text-center"
       >
-        Carga una imagen... y descubre el oscuro secreto que acecha detrás de
-        ella.
+        Carga una imagen... <span class="block lg:inline">
+          y descubre el oscuro secreto que acecha detrás de ella.
+        </span>
       </h2>
     </div>
     <CldUploadWidget
@@ -68,7 +69,7 @@ import SmokeBackground from "../components/SmokeBackground.astro";
     >
       <div class="animate-pulse">
         <button
-          class="bg-orange-600 hover:bg-orange-700 text-white font-bold py-2 px-4 rounded-full shadow-lg hover:shadow-orange-500/50 transition duration-300 ease-in-out transform hover:scale-105"
+          class="bg-orange-600 hover:bg-orange-700 text-white text-xl font-bold py-4 px-6 rounded-full shadow-lg hover:shadow-orange-500/50 transition duration-300 ease-in-out transform hover:scale-105"
           >Subir imagen</button
         >
       </div>

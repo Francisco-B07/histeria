@@ -1,4 +1,6 @@
 ---
+import Play from "../components/play.astro";
+import Pause from "../components/pause.astro";
 import SmokeImage from "../components/SmokeImage.astro";
 import Layout from "../layouts/Layout.astro";
 import { getCldImageUrl } from "astro-cloudinary/helpers";
@@ -21,21 +23,47 @@ const url = getCldImageUrl({ src: id });
     class="bg-gradient-to-b from-black via-purple-900 to-black text-gray-300 min-h-screen flex flex-col items-center py-10 px-4"
   >
     <div id="history">
-      <div class="flex flex-col items-center justify-center py-14">
+      <div
+        class="flex flex-col lg:flex-row items-center justify-center py-6 lg:py-14 gap-4"
+      >
         <h1
           id="title"
-          class="text-5xl font-bold text-orange-600 tracking-wide uppercase transition-opacity duration-300"
+          class="text-3xl text-balance text-center lg:text-5xl font-bold text-orange-600 tracking-wide uppercase transition-opacity duration-300"
           style="font-family: 'Creepster', cursive;"
         >
         </h1>
-      </div>
-      <div class="flex justify-center items-center w-[1000px] gap-10">
-        <div
-          id="story"
-          class="w-1/2 text-lg text-gray-200 story-text min-h-[200px] opacity-0 transition-opacity duration-300"
-        >
+        <div class="w-[120px] flex gap-3 mt-4 lg:mt-0">
+          <div
+            id="play-audio"
+            class="rounded-full p-2 bg-red-500 text-white flex items-center cursor-pointer hover:scale-110 hover:bg-red-600"
+          >
+            <Play />
+          </div>
+          <div
+            id="resume-audio"
+            class="hidden rounded-full p-2 bg-red-500 text-white items-center cursor-pointer hover:scale-110 hover:bg-red-600"
+          >
+            <Play />
+          </div>
+          <div
+            id="pause-audio"
+            class="rounded-full opacity-50 p-2 bg-red-500 text-white items-center cursor-pointer hover:scale-110 hover:bg-red-600"
+          >
+            <Pause />
+          </div>
         </div>
-        <div class="relative w-1/2">
+      </div>
+      <div
+        class="flex flex-col lg:flex-row justify-center items-center lg:w-[900px] gap-4 lg:gap-10"
+      >
+        <div class="flex flex-col w-full lg:w-1/2 order-2 lg:order-1">
+          <div
+            id="story"
+            class="text-lg text-gray-200 story-text min-h-[200px] opacity-0 transition-opacity duration-300"
+          >
+          </div>
+        </div>
+        <div class="relative w-full lg:w-1/2 order-1 lg:order-2">
           <img
             id="image"
             src={url}
@@ -50,7 +78,7 @@ const url = getCldImageUrl({ src: id });
     </div>
     <div
       id="loading"
-      class="absolute h-full flex justify-center items-center text-4xl font-bold text-orange-600 tracking-wide transition-opacity duration-300"
+      class="text-2xl text-pretty absolute h-full flex justify-center items-center lg:text-4xl font-bold text-orange-600 tracking-wide transition-opacity duration-300"
       style="font-family: 'Creepster', cursive;"
     >
       El misterio está a punto de revelarse...
@@ -92,7 +120,6 @@ const url = getCldImageUrl({ src: id });
     display: none;
   }
   #loading {
-    font-size: 2.5rem;
     color: #ff4500;
     text-shadow: 2px 2px 5px rgba(0, 0, 0, 0.8);
     animation: flicker 2s infinite alternate;
@@ -121,6 +148,7 @@ const url = getCldImageUrl({ src: id });
     transition: opacity 3s ease;
   }
 </style>
+
 <script>
   import { getCldImageUrl } from "astro-cloudinary/helpers";
 
@@ -197,6 +225,83 @@ const url = getCldImageUrl({ src: id });
       }
 
       read();
+
+      function textToSpeech(text: string) {
+        const pauseButton = document.getElementById("pause-audio");
+        const resumeButton = document.getElementById("resume-audio");
+
+        resumeButton!.classList.remove("hidden");
+        const synth = window.speechSynthesis;
+
+        // Dividir el texto en oraciones usando ". " como delimitador
+        const sentences = text.split(". ");
+
+        let currentIndex = 0; // Índice de la oración actual
+
+        function speakNextSentence() {
+          // resumeButton!.style.display = "none";
+          if (currentIndex < sentences.length) {
+            const speech = new SpeechSynthesisUtterance(
+              sentences[currentIndex]
+            );
+
+            speech.lang = "es-ES";
+            speech.pitch = 0.7;
+            speech.rate = 0.9;
+            speech.volume = 0.9;
+
+            let voices = synth.getVoices();
+            if (voices.length > 0) {
+              speech.voice =
+                voices.find(
+                  (voice) =>
+                    voice.lang === "es-ES" && voice.name.includes("Google")
+                ) || voices[0];
+            } else {
+              synth.onvoiceschanged = () => {
+                voices = synth.getVoices();
+                speech.voice =
+                  voices.find((voice) => voice.lang === "es-ES") || voices[0];
+              };
+            }
+
+            // Evento que se llama cuando la síntesis de voz termina
+            speech.onend = () => {
+              currentIndex++; // Incrementar el índice para la siguiente oración
+              speakNextSentence(); // Reproducir la siguiente oración
+            };
+
+            // Iniciar la reproducción
+            synth.speak(speech);
+          }
+        }
+
+        // Iniciar la síntesis de la primera oración
+        speakNextSentence();
+        // Manejo de eventos para pausar y reanudar
+
+        pauseButton?.addEventListener("click", () => {
+          pauseButton.style.opacity = "1";
+          resumeButton!.style.opacity = ".5";
+          synth.pause(); // Pausar el audio
+        });
+
+        resumeButton?.addEventListener("click", () => {
+          pauseButton!.style.opacity = ".5";
+          resumeButton.style.opacity = "1";
+          synth.resume(); // Reanudar el audio
+        });
+      }
+
+      const playButton = document.getElementById("play-audio");
+
+      // Agrega el evento al botón para reproducir el audio
+      playButton?.addEventListener("click", () => {
+        const storyText = document.getElementById("story")!.innerText;
+        playButton.style.display = "none";
+
+        textToSpeech(storyText);
+      });
     })
     .catch((error) => {
       console.error("Error generando la historia:", error);
