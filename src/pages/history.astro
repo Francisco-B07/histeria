@@ -25,10 +25,10 @@ const url = getCldImageUrl({ src: id });
     class="bg-gradient-to-b from-black via-purple-900 to-black text-gray-300 min-h-screen flex flex-col items-center py-10 px-4"
   >
     <a href="/" class="cursor-pointer">
-      <div class="absolute top-28 left-4">
+      <div class="absolute top-6 lg:top-28 left-4">
         <ArrowLeft />
       </div>
-      <div class="absolute top-28 left-10">
+      <div class="absolute top-6 lg:top-28 left-10">
         <Home />
       </div>
     </a>
@@ -43,7 +43,7 @@ const url = getCldImageUrl({ src: id });
           style="font-family: 'Creepster', cursive;"
         >
         </h1>
-        <div class="w-[120px] flex gap-3 mt-4 lg:mt-0 z-10">
+        <div class="flex gap-3 mt-4 lg:mt-0 z-10">
           <div
             id="play-audio"
             class="rounded-full p-2 bg-red-500 text-white flex items-center cursor-pointer hover:scale-110 hover:bg-red-600"
@@ -58,7 +58,7 @@ const url = getCldImageUrl({ src: id });
           </div>
           <div
             id="pause-audio"
-            class="rounded-full opacity-50 p-2 bg-red-500 text-white items-center cursor-pointer hover:scale-110 hover:bg-red-600"
+            class="hidden rounded-full p-2 bg-red-500 text-white items-center cursor-pointer hover:scale-110 hover:bg-red-600"
           >
             <Pause />
           </div>
@@ -241,7 +241,9 @@ const url = getCldImageUrl({ src: id });
         const pauseButton = document.getElementById("pause-audio");
         const resumeButton = document.getElementById("resume-audio");
 
-        resumeButton!.classList.remove("hidden");
+        // resumeButton!.classList.remove("hidden");
+        pauseButton!.classList.remove("hidden");
+        // pauseButton!.style.display = "block";
         const synth = window.speechSynthesis;
 
         // Dividir el texto en oraciones usando ". " como delimitador
@@ -292,14 +294,14 @@ const url = getCldImageUrl({ src: id });
         // Manejo de eventos para pausar y reanudar
 
         pauseButton?.addEventListener("click", () => {
-          pauseButton.style.opacity = "1";
-          resumeButton!.style.opacity = ".5";
+          pauseButton.style.display = "none";
+          resumeButton!.style.display = "block";
           synth.pause(); // Pausar el audio
         });
 
         resumeButton?.addEventListener("click", () => {
-          pauseButton!.style.opacity = ".5";
-          resumeButton.style.opacity = "1";
+          pauseButton!.style.display = "block";
+          resumeButton.style.display = "none";
           synth.resume(); // Reanudar el audio
         });
       }
