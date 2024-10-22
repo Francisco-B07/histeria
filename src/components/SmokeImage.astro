@@ -1,6 +1,6 @@
-<div id="smoke-bkg" class="absolute top-0 z-0 fade-in-out w-full h-full">
+<div id="smoke-img" class="absolute top-0 z-0 fade-in-out w-full h-full">
   <canvas
-    id="smoke-canvas"
+    id="smoke-canvas-img"
     aria-label="Efecto de fondo de humo"
     class="w-full h-full rounded-lg"></canvas>
 </div>
@@ -24,7 +24,7 @@
 
   /* Aplica la animación al contenedor del humo */
   .fade-in-out {
-    animation: fadeInOut 40s ease-in-out forwards; /* La animación dura 10s en total */
+    animation: fadeInOut 36s ease-in-out forwards; /* La animación dura 10s en total */
   }
 </style>
 
@@ -35,7 +35,7 @@
   ) => context.querySelector<T>(selector);
 
   const NUM_PARTICLES = 50; // Número de partículas
-  const canvas = $("#smoke-canvas") as HTMLCanvasElement;
+  const canvas = $("#smoke-canvas-img") as HTMLCanvasElement;
   const ctx = canvas.getContext("2d") as CanvasRenderingContext2D;
   let raf: number;
 
