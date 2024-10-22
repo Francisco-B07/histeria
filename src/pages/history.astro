@@ -1,5 +1,5 @@
 ---
-import SmokeBackground from "../components/SmokeBackground.astro";
+import SmokeImage from "../components/SmokeImage.astro";
 import Layout from "../layouts/Layout.astro";
 import { getCldImageUrl } from "astro-cloudinary/helpers";
 
@@ -40,10 +40,10 @@ const url = getCldImageUrl({ src: id });
             id="image"
             src={url}
             alt="Imagen de la historia"
-            class="rounded-lg shadow-lg"
+            class="rounded-lg"
           />
-          <div id="smoke" class="rounded-lg">
-            <SmokeBackground />
+          <div id="smoke">
+            <SmokeImage />
           </div>
         </div>
       </div>
@@ -92,7 +92,7 @@ const url = getCldImageUrl({ src: id });
     display: none;
   }
   #loading {
-    font-size: 3rem;
+    font-size: 2.5rem;
     color: #ff4500;
     text-shadow: 2px 2px 5px rgba(0, 0, 0, 0.8);
     animation: flicker 2s infinite alternate;
@@ -193,7 +193,7 @@ const url = getCldImageUrl({ src: id });
 
           image.onload = () => {
             image.style.opacity = "1";
-            smoke!.style.display = "none";
+            // smoke!.style.display = "none";
           };
 
           read();

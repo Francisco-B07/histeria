@@ -1,12 +1,15 @@
 ---
 import Layout from "../layouts/Layout.astro";
 import { CldUploadWidget } from "astro-cloudinary";
+import SmokeBackground from "../components/SmokeBackground.astro";
 ---
 
 <Layout title="HisTerIA">
   <main
     class="bg-gradient-to-b from-black via-purple-900 to-black text-gray-300 min-h-screen flex flex-col items-center py-10 px-4"
   >
+    <SmokeBackground />
+
     <div class="flex flex-col items-center justify-center py-14 mb-14">
       <h1
         class="text-5xl font-bold text-orange-600 tracking-wide uppercase animate-bounce duration-[3s] drop-shadow-lg"

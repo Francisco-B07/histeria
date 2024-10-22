@@ -1,9 +1,32 @@
-<div id="smoke-bkg" class="absolute top-0 z-0 w-full h-full">
+<div id="smoke-bkg" class="absolute top-0 z-0 fade-in-out w-full h-full">
   <canvas
     id="smoke-canvas"
     aria-label="Efecto de fondo de humo"
-    class="opacity-15 w-full h-full rounded-lg"></canvas>
+    class="w-full h-full rounded-lg"></canvas>
 </div>
+
+<style>
+  /* Define la animación */
+  @keyframes fadeInOut {
+    0% {
+      opacity: 0;
+    }
+    65% {
+      opacity: 1;
+    }
+    80% {
+      opacity: 1;
+    }
+    100% {
+      opacity: 0;
+    }
+  }
+
+  /* Aplica la animación al contenedor del humo */
+  .fade-in-out {
+    animation: fadeInOut 35s ease-in-out forwards; /* La animación dura 10s en total */
+  }
+</style>
 
 <script>
   const $ = <T extends HTMLElement>(
