@@ -10,7 +10,7 @@ import SmokeBackground from "../components/SmokeBackground.astro";
   >
     <SmokeBackground />
 
-    <div class="flex flex-col items-center justify-center py-14 mb-14">
+    <div class="flex flex-col items-center justify-center pt-14 mb-8">
       <h1
         class="text-7xl lg:text-8xl font-bold text-orange-600 tracking-wide uppercase animate-bounce duration-[3s] drop-shadow-lg"
         style="font-family: 'Creepster', cursive;"
@@ -18,13 +18,23 @@ import SmokeBackground from "../components/SmokeBackground.astro";
         HisTerIA
       </h1>
       <h2
-        class="mt-10 text-xl lg:text-2xl text-gray-300 italic animate-pulse drop-shadow-md text-pretty text-center"
+        class="max-w-[800px] mt-10 text-xl lg:text-2xl text-gray-300 italic drop-shadow-md text-pretty text-center"
       >
-        Carga una imagen... <span class="block lg:inline">
-          y descubre el oscuro secreto que acecha detrás de ella.
+        Desde tiempos antiguos, Halloween ha sido la noche en que los espíritus
+        vagan entre nosotros, donde lo desconocido acecha en cada rincón y los
+        secretos más oscuros se esconden justo bajo la superficie.
+        <span class="block">
+          ¿Qué sucede cuando miras más allá de lo que tus ojos pueden ver?
         </span>
       </h2>
     </div>
+    <p
+      class="my-10 text-xl lg:text-2xl text-gray-300 italic animate-pulse drop-shadow-md text-pretty text-center"
+    >
+      Carga una imagen... <span class="block lg:inline">
+        y descubre el oscuro secreto que acecha detrás de ella.
+      </span>
+    </p>
     <CldUploadWidget
       id="upload-widget"
       uploadPreset="upload-images"

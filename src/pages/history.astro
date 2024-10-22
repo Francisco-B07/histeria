@@ -4,6 +4,8 @@ import Pause from "../components/Pause.astro";
 import SmokeImage from "../components/SmokeImage.astro";
 import Layout from "../layouts/Layout.astro";
 import { getCldImageUrl } from "astro-cloudinary/helpers";
+import ArrowLeft from "../components/ArrowLeft.astro";
+import Home from "../components/Home.astro";
 
 const { searchParams } = Astro.url;
 const id = searchParams.get("id");
@@ -22,6 +24,15 @@ const url = getCldImageUrl({ src: id });
     data-description={description}
     class="bg-gradient-to-b from-black via-purple-900 to-black text-gray-300 min-h-screen flex flex-col items-center py-10 px-4"
   >
+    <a href="/" class="cursor-pointer">
+      <div class="absolute top-28 left-4">
+        <ArrowLeft />
+      </div>
+      <div class="absolute top-28 left-10">
+        <Home />
+      </div>
+    </a>
+
     <div id="history">
       <div
         class="flex flex-col lg:flex-row items-center justify-center py-6 lg:py-14 gap-4"
